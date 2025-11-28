@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+<meta charset="UTF-8">
+  <title>Cartes étudiants</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script>
+//setTimeout(function() {
+           //             window.print()
+             //       }, 1000);
+			 
+
+$(document).ready(function () {
+  var url_string=window.location.href;
+  var url = new URL(url_string);
+  var cin = url.searchParams.get("cin");
+  var cne= url.searchParams.get("CNE");
+  var nom = url.searchParams.get("NOM");
+  var prenom= url.searchParams.get("PRENOM");
+  var nomar = url.searchParams.get("NOMAR");
+  var prenomar= url.searchParams.get("PRENOMAR");
+  var filiere= url.searchParams.get("FILIERE");
+  var appoge= url.searchParams.get("APPOGE");
+  var inscription= url.searchParams.get("INSCRIPTION");
+  $("#appoge").html(appoge) ;
+  $("#inscription").html(inscription) ;
+  $("#filiere").html(filiere) ;
+  $("#nom_fr").html(nom) ;
+  $("#nom_ar").html(nomar) ;
+  $("#prenom_ar").html(prenomar) ;
+  $("#prenom_fr").html(prenom) ;
+  $("#cne").html(cne) ;
+  $("#cin").html(cin) ;
+  $("#pic_student").attr("src", "photos/"+cne+".jpg");
+
+			const text = "CIN:"+cin+" /CNE:"+cne+" /NOM:"+nom+" /PRENOM:"+prenom;
+            const qrcodeContainer = document.getElementById('qrcode');
+
+            // Clear existing QR code, if any
+            qrcodeContainer.innerHTML = '';
+
+            // Generate the QR code
+            const qrcode = new QRCode(qrcodeContainer, {
+                text: text,
+                width: 100,
+                height: 100,
+            });
+  
+                  setTimeout(function() {
+                        window.print()
+                    }, 1000);
+                  window.onafterprint = function() {
+                        setTimeout(function() {
+                            window.close()
+                        }, 1000)
+                    };
+
+   });
+   
+</script>
+</head>
+<body>
+  <div>
+    <link href="group1.css" rel="stylesheet" />
+
+    <div class="group1-container">
+
+    <div class="group1-group1">
+        <img src="cr1512-ebwp-500h.jpg" alt="CR1512" class="group1-cr1" />
+        <img id ="pic_student" src="{{ url_for('afficher_photo', numAppoge=row[7]) }}" alt="Photo de l'étudiant" style="width:100px; height:100px;" class="group1-rectangle2">
+
+
+
+<div id="qrcode" alt="Code QR" style="width: 100px; height: 100px;" class="group1-rectangle3"></div>
+
+        <span class="group1-text">Nom</span>
+        <span class="group1-text01" id="nom_fr"></span>
+        <span class="group1-text02">الاسم</span>
+        <span class="group1-text03" id="prenom_ar"></span>
+        <span class="group1-text04">ر.و.ط :</span>
+        <span class="group1-text05" style="right: 50px;" id="appoge"></span>
+        <span class="group1-text06">النسب</span>
+        <span class="group1-text07" id="nom_ar"></span>
+        <span class="group1-text08">ب.ت.و :</span>
+        <span class="group1-text09">Prenom</span>
+        <span class="group1-text10" id="prenom_fr"></span>
+        <span class="group1-text11">CNE</span>
+        <span class="group1-text12" id="cne"></span>
+        <span class="group1-text13">CIN</span>
+        <span class="group1-text14" id="cin"></span>
+        <span class="group1-text15">
+          <span></span>
+          <span class="group1-text17">
+            Carte Universitaire&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp;البطاقة الجامعية
+          </span>
+        </span>
+        <span class="group1-text18">Université Abdelmalek Essaâdi</span>
+        <span class="group1-text19">
+          <span>Faculté Ossoul Eddine de Tétouan</span>
+          <br>
+          <span style="font-size: 18px;" id="filiere"></span>
+        </span>
+        <span class="group1-text21"><span>Première inscription</span></span>
+        <span class="group1-text23" id="inscription"><span></span></span>
+      </div>
+
+
+    </div>
+  </div>
+  
+</body>
+</html>

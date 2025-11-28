@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Cartes étudiants</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add Bootstrap Table CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.18.3/bootstrap-table.min.css">
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<link href="group1.css" rel="stylesheet" />
+<style>
+
+.custom-file-button {
+	input[type="file"] {
+		margin-left: -2px !important;
+
+		&::-webkit-file-upload-button {
+			display: none;
+		}
+		&::file-selector-button {
+			display: none;
+		}
+	}
+
+	&:hover {
+		label {
+			background-color: #dde0e3;
+			cursor: pointer;
+		}
+	}
+}
+
+/* file upload button */
+input[type="file"]::file-selector-button {
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  background-color:#008000;
+  color:white;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  margin-right: 16px;
+  transition: background-color 200ms;
+  display:none;
+}
+
+/* file upload button hover state */
+input[type="file"]::file-selector-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* file upload button active state */
+input[type="file"]::file-selector-button:active {
+  background-color: #e5e7eb;
+}
+</style>
+<script>
+function printcard()
+{
+window.open('print_card.html?CIN='+$("#cin").text()+'&CNE='+$("#cne").text()+'&NOM='+$("#nom_fr").text()+'&PRENOM='+$("#prenom_fr").text()+'&NOMAR='+$("#nom_ar").text()+'&PRENOMAR='+$("#prenom_ar").text()+'&FILIERE='+$("#filiere").text()+'&APPOGE='+$("#appoge").text()+'&INSCRIPTION='+$("#inscription").text(), '', 'height=520, width=770,toolbar=0, menubar=0, scrollbars=1, resizable=1,status=0');
+}
+
+function go(a,b,c,d,e,f,g,h,i)
+{
+console.log(c);
+$("#nom_fr").html(c) ;
+$("#nom_ar").html(e) ;
+$("#prenom_ar").html(f) ;
+$("#prenom_fr").html(d) ;
+$("#cne").html(b) ;
+$("#cin").html(a) ;
+$("#filiere").html(g);
+$("#appoge").html(h);
+$("#inscription").html(i);
+$("#pic_student").attr("src", "photos/"+b+".jpg");
+
+			const text = "CIN:"+a+" /CNE:"+b+" /NOM:"+c+" /PRENOM:"+d;
+            const qrcodeContainer = document.getElementById('qrcode');
+
+            // Clear existing QR code, if any
+            qrcodeContainer.innerHTML = '';
+
+            // Generate the QR code
+            const qrcode = new QRCode(qrcodeContainer, {
+                text: text,
+                width: 100,
+                height: 100,
+            });
+}
+
+$.ajax ({
+    url : 'studentslist.php',
+    type : 'GET',
+    dataType : 'html',
+    success : function(code_html, statut){
+      document.getElementById("students").innerHTML=code_html;
+
+
+        },
+        error : function(resultat, statut, erreur){
+            alert("Erreur");
+        }
+    });
+
+function _(el){
+	return document.getElementById(el);
+}
+function uploadFile(){
+	var file = _("file").files[0];
+
+	var formdata = new FormData();
+	formdata.append("file", file);
+	var ajax = new XMLHttpRequest();
+	ajax.addEventListener("load", completeHandler, false);
+	ajax.open("POST", "import_students_list.php");
+	ajax.send(formdata);
+}
+
+function uploadFile2(){
+	var file = _("file2").files[0];
+
+	var formdata = new FormData();
+	formdata.append("file", file);
+	var ajax = new XMLHttpRequest();
+	ajax.addEventListener("load", completeHandler, false);
+	ajax.open("POST", "import_students_photos.php");
+	ajax.send(formdata);
+}
+
+function completeHandler(event){
+
+alert ("Fichier importé avec succès !");
+location.reload();
+
+
+/*
+	$.notify({
+				 icon: "notification_important",
+				 message: event.target.responseText
+
+			 },{
+				 type: type_message,
+				 timer: 4000,
+				 placement: {
+					 from: 'top',
+					 align: 'center'
+				 }
+			 });
+*/
+
+}
+				
+</script>
+</head>
+<body>
+    <div class="container mt-4">
+	<div class="row">
+	  <div class="col-md-6">
+	    <h3 style="padding-top:30px;color:#3498DB">Outil de génération des cartes étudiants</h3>
+	  </div>
+	  <div class="col-md-6">
+	    <img class="float-right" src="faculte.png" width="200px" alt="Logo"/>
+      <br>
+       <button style=" margin-top: 8px;" type="button" class="btn btn-warning" onclick="location.assign('http://127.0.0.1/carteEtudiant/')"><i class="fa-solid fa-right-from-bracket"></i>  Se déconnecter</button>
+	  </div>
+	</div>
+
+
+
+	<span class="file-name">Importer la liste des étudiants :</span> <br>
+	<div class="row">
+	<div class="input-group custom-file-button col-md-6">
+		<label class="input-group-text" for="file" >Choisir Fichier</label>
+		<input type="file" class="form-control" id="file" name="files[]" multiple aria-describedby="fileHelp"  accept=".xlsx">
+	</div>
+	<div class="col-md-6">
+	<button type="button" class="btn btn-success" onclick="uploadFile()"><i class="fa-solid fa-file-import"></i>  Importer</button>
+	</div>
+	</div>
+	
+	<span class="file-name">Importer un fichier (*.zip) contenant les photos des étudiants :</span> <br>
+	<div class="row">
+	<div class="input-group custom-file-button col-md-6">
+		<label class="input-group-text" for="file2" >Choisir Fichier</label>
+		<input type="file" class="form-control" id="file2" name="files2[]" multiple aria-describedby="fileHelp"  accept=".zip">
+	</div>
+	<div class="col-md-6">
+	<button type="button" class="btn btn-success" onclick="uploadFile2()"><i class="fa-solid fa-file-import"></i>  Importer</button>
+	</div>
+	</div>
+
+        <table id="table" data-toggle="table" data-search="true" data-search-placeholder="Rechercher...">
+            <thead>
+                <tr>
+					<th data-field="cin" data-filter-control="select" data-sortable="true">CIN</th>
+					<th data-field="examen" data-filter-control="select" data-sortable="true">CNE</th>
+					<th data-field="date" data-filter-control="select" data-sortable="true">Nom</th>
+					<th data-field="prenom" data-filter-control="input" data-sortable="true">Prénom</th>
+					<th data-field="nom_ar" data-filter-control="select" data-sortable="true">النسب</th>
+					<th data-field="prenom_ar" data-filter-control="input" data-sortable="true">الإسم</th>
+					<th data-field="prenom_ar" data-filter-control="input" data-sortable="true">Filière</th>
+					<th data-field="prenom_ar" data-filter-control="input" data-sortable="true">Appogé</th>
+					<th data-field="prenom_ar" data-filter-control="input" data-sortable="true">inscription</th>
+					<th data-field="carte" >Carte d'étudiant</th>
+				</tr>
+            </thead>
+            <tbody id="students">
+
+            </tbody>
+        </table>
+    </div>
+	
+	
+	<div class="modal fade" id="viewcard" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content" style="width: 640px;height:560px; margin-left: -100px;">
+          <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        <h4 class="modal-title" style='text-align: left;'  id="Heading">Aperçu carte d'étudiant</h4>
+      </div>
+          <div class="modal-body">
+       <div class="form-group">
+
+        <input id="id_fournisseur_to_delete" class="form-control " type="hidden" >
+        </div>
+<div class="form-group">
+             <div class="group1-group1">
+        <img src="cr1512-ebwp-500h.jpg" alt="CR1512" class="group1-cr1" />
+        <img id ="pic_student" src="{{ url_for('afficher_photo', numAppoge=row[7]) }}" alt="Photo de l'étudiant" style="width:100px; height:100px;" class="group1-rectangle2">
+
+<div id="qrcode" alt="Code QR" style="width: 100px; height: 100px;" class="group1-rectangle3"></div>
+
+        <span class="group1-text">Nom</span>
+        <span class="group1-text01" id="nom_fr"></span>
+        <span class="group1-text02">الاسم</span>
+        <span class="group1-text03" id="prenom_ar"></span>
+        <span class="group1-text04">ر.و.ط : </span>
+        <span class="group1-text05" style="right: 50px;" id="appoge"></span>
+        <span class="group1-text06">النسب</span>
+        <span class="group1-text07" id="nom_ar"></span>
+        <span class="group1-text08">ب.ت.و :</span>
+        <span class="group1-text09">Prenom</span>
+        <span class="group1-text10" id="prenom_fr"></span>
+        <span class="group1-text11">CNE</span>
+        <span class="group1-text12" id="cne"></span>
+        <span class="group1-text13">CIN</span>
+        <span class="group1-text14" id="cin"></span>
+        <span class="group1-text15">
+          <span></span>
+          <span class="group1-text17">
+            Carte Universitaire&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            &nbsp;البطاقة الجامعية
+          </span>
+        </span>
+        <span class="group1-text18" style="left: 75px;">Université Abdelmalek Essaâdi</span>
+        <span class="group1-text19">
+          <span style="margin-left: 93px; font-size: 20px;">Faculté Ossoul Eddine de Tétouan</span>
+          <br>
+          <span style="margin-left: 120px; font-size: 18px; " id="filiere"></span>
+        </span>
+
+        <!-- <span class="group1-text19">Filière</span> -->
+
+        <span class="group1-text21"><span>Première inscription</span></span>
+        <span class="group1-text23" id="inscription"><span></span></span>
+      </div>
+	   </div>
+
+      </div>
+        <div class="modal-footer ">
+        <button id="print_card" type="button" class="btn btn-info" onclick="printcard();"><span class="glyphicon glyphicon-ok-sign"></span> Imprimer / PDF</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Fermer</button>
+      </div>
+        </div>
+
+    <!-- Add Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Add Bootstrap Table JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.18.3/bootstrap-table.min.js"></script>
+</body>
+</html>
